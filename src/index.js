@@ -47,31 +47,75 @@
  * inf.next().value // 2
  * // and on and on...
  */
-export default function range(
-  start = 0,
-  stop = -1,
-  step = 1
-) {
-  if (stop === -1) {
-    stop = start;
-    start = 0;
+function range(...args) {
+  switch (args.length) {
+    case 1:
+      return new Range({ stop: args[0]});
+    case 2:
+      return new Range({ start: args[0], stop: args[1] });
+    case 3:
+      return new Range({ start: args[0], stop: args[1], step: args[2] });
+    default:
+      return new Range();
+  }
+}
+
+module.exports = range
+
+class Range {
+  constructor({ start = 0, stop = 0, step = 1 } = {}) {
+    this.start = start;
+    this.stop = stop;
+    this.step = step;
   }
 
-  return {
-    [Symbol.iterator]: function*() {
-      if (start >= stop) return;
-
-      let current = start;
-      while (current <= stop - step) {
-        yield current;
-        current += step;
-      }
-    },
-    lazy () {
-      return this[Symbol.iterator]();
-    },
-    toArray () {
-      return [ ...this ];
+  *[Symbol.iterator]() {
+    if (this.start >= this.stop) {
+      return;
     }
-  };
+
+    const finalVal = this.stop - this.step;
+    let val = this.start;
+    while (val <= finalVal) {
+      yield val;
+      val += this.step;
+    }
+  }
+
+  get length() {
+    return (this.stop - this.start) / this.step;
+  }
+
+  toArray() {
+    return [...this];
+  }
+
+  lazy() {
+    return this[Symbol.iterator]();
+  }
+
+  map(cb) {
+    let result = new Array(this.length);
+    let index = 0;
+    for (let val of this) {
+      result[index] = cb(val, index, this);
+      index++;
+    }
+    return result;
+  }
+
+  filter(predicate) {
+    let result = [];
+    let index = 0;
+    let resultIndex = 0;
+    for (let val of this) {
+      if (predicate(val, index, this)) {
+        result[resultIndex] = val;
+        resultIndex++;
+      }
+      index++;
+    }
+    return result;
+  }
 }
+
