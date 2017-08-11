@@ -1,0 +1,26 @@
+{
+  "name": "range",
+  "version": "1.0.0",
+  "description": "A range function that works like the Python 3 range function",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adregan/range.git"
+  },
+  "keywords": [
+    "range",
+    "utility"
+  ],
+  "author": "Duncan Regan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adregan/range/issues"
+  },
+  "homepage": "https://github.com/adregan/range#readme",
+  "devDependencies": {
+    "jest": "^17.0.3"
+  }
+}
